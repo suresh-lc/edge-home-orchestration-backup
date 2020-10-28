@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 Samsung Electronics All Rights Reserved.
+ * Copyright 2020 Samsung Electronics All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import (
 	"controller/securemgr/verifier"
 	"controller/servicemgr"
 	executor "controller/servicemgr/executor/containerexecutor"
+	"controller/storagemgr/storagedriver"
+	storagemgr "controller/storagemgr/util"
 
 	"orchestrationapi"
 
@@ -43,6 +45,9 @@ import (
 	"restinterface/route"
 
 	"db/bolt/wrapper"
+
+	"github.com/edgexfoundry/device-sdk-go"
+	"github.com/edgexfoundry/device-sdk-go/pkg/startup"
 )
 
 const logPrefix = "interface"
@@ -51,6 +56,8 @@ const logPrefix = "interface"
 const (
 	platform      = "docker"
 	executionType = "container"
+
+	dataStorageService = "datastorage"
 
 	edgeDir = "/var/edge-orchestration"
 
@@ -63,6 +70,9 @@ const (
 
 	cipherKeyFilePath = edgeDir + "/user/orchestration_userID.txt"
 	deviceIDFilePath  = edgeDir + "/device/orchestration_deviceID.txt"
+
+	YamlFileName           = "sample-json-device.yaml"
+	ConfigFileName         = "configuration.toml"
 )
 
 var (
@@ -158,6 +168,12 @@ func orchestrationInit() error {
 	restEdgeRouter.Add(ehandle)
 
 	restEdgeRouter.Start()
+
+	storagemgr.MapYamlFile(YamlFileName)
+	hostIPAddr, _ := discoverymgr.SetNetworkArgument()
+	storagemgr.MapConfigFile(ConfigFileName, hostIPAddr)
+	sd := storagedriver.StorageDriver{}
+	startup.Bootstrap(dataStorageService, device.Version, &sd)
 
 	log.Println(logPrefix, "orchestration init done")
 

@@ -33,6 +33,8 @@ PKG_LIST=(
         "controller/servicemgr/executor/containerexecutor"
         "controller/servicemgr/executor/nativeexecutor"
         "controller/servicemgr/notification"
+        "controller/storagemgr/util"
+        "controller/storagemgr/storagedriver"
         "db/bolt/common"
         "db/bolt/configuration"
         "db/bolt/network"
@@ -411,6 +413,7 @@ function run_docker_container() {
     sudo mkdir -p /var/edge-orchestration/data/cert
     sudo mkdir -p /var/edge-orchestration/user
     sudo mkdir -p /var/edge-orchestration/device
+    sudo mkdir -p /var/edge-orchestration/datastorage
 
     echo ""
     echo "**********************************"

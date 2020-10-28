@@ -16,6 +16,7 @@ ENV APP_NAME=edge-orchestration
 
 # copy files
 COPY $APP_BIN_DIR/$APP_NAME $APP_MAIN_DIR/run.sh $TARGET_DIR/
+RUN mkdir -p $TARGET_DIR/res/
 
 # expose ports
 EXPOSE $HTTP_PORT $MDNS_PORT $ZEROCONF_PORT
